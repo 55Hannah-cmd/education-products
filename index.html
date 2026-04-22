@@ -4,7 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>巧虎學習館 SKU資料</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js">
+// ── Dashboard tab init ──────────────────────────────────
+let dashboardInitialized = false;
+const _origSwitchTab = switchTab;
+switchTab = function(name, btn) {
+  _origSwitchTab(name, btn);
+  if (name === 'dashboard' && !dashboardInitialized) {
+    dashboardInitialized = true;
+    initDashboard();
+  }
+};
+
+function initDashboard() {
+  // Initialize language buttons
+  setLang('ja');
+  document.getElementById('btn-ja').classList.add('active');
+  document.getElementById('btn-zh').classList.remove('active');
+}
+
+
+
+</script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: sans-serif; background: #f8f8f6; }
@@ -42,12 +63,139 @@
   .popup-meta { font-size: 11px; color: #73726c; margin-top: 4px; }
   .popup-close { position: absolute; top: 6px; right: 8px; font-size: 16px; cursor: pointer; color: #73726c; background: none; border: none; line-height: 1; }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+/* ── Dashboard tab styles ── */
+
+/* Dashboard CSS variables (dashboard only) */
+#page-dashboard {
+  --dash-bg: #fdf6f0;
+  --dash-surface: #ffffff;
+  --dash-surface2: #fef0f5;
+  --dash-border: rgba(220,180,200,0.35);
+  --dash-text-primary: #5a3a4a;
+  --dash-text-secondary: #9a7080;
+  --dash-text-muted: #c4a0b0;
+  --dash-accent: #e88fa8;
+  --dash-c-web: #7dbfe2;
+  --dash-c-tel: #a8d8a8;
+  --dash-c-kol: #f4a7b9;
+  --dash-c-ec: #f9c98a;
+  --dash-c-other: #c9b8e8;
+  --dash-radius: 10px;
+  --dash-radius-lg: 18px;
+  background: #fdf6f0;
+  padding: 36px 24px 72px;
+  font-family: "Noto Sans JP", "Noto Sans TC", sans-serif;
+  color: #5a3a4a;
+}
+#page-dashboard *, #page-dashboard *::before, #page-dashboard *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:           #fdf6f0;
+    --surface:      #ffffff;
+    --surface2:     #fef0f5;
+    --border:       rgba(220,180,200,0.35);
+    --text-primary:   #5a3a4a;
+    --text-secondary: #9a7080;
+    --text-muted:     #c4a0b0;
+    --accent:         #e88fa8;
+    --c-web:   #7dbfe2;
+    --c-tel:   #a8d8a8;
+    --c-kol:   #f4a7b9;
+    --c-ec:    #f9c98a;
+    --c-other: #c9b8e8;
+    --radius:    10px;
+    --radius-lg: 18px;
+    --font: 'Noto Sans JP', 'Noto Sans TC', sans-serif;
+  }
+#page-dashboard body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 36px 24px 72px;
+  }
+#page-dashboard .lang-bar {
+    max-width: 1100px;
+    margin: 0 auto 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0;
+  }
+#page-dashboard .lang-btn {
+    padding: 6px 18px;
+    font-size: 13px;
+    font-family: var(--font);
+    font-weight: 500;
+    border: 1.5px solid var(--accent);
+    background: var(--surface);
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    letter-spacing: 0.04em;
+  }
+#page-dashboard .lang-btn:first-child { border-radius: 99px 0 0 99px; border-right: none; }
+#page-dashboard .lang-btn:last-child { border-radius: 0 99px 99px 0; border-left: 0.75px solid var(--accent); }
+#page-dashboard .lang-btn.active { background: var(--accent); color: #fff; }
+#page-dashboard .lang-btn:hover:not(.active) { background: var(--surface2); }
+#page-dashboard .page-header {
+    max-width: 1100px;
+    margin: 0 auto 36px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 18px;
+    gap: 16px;
+  }
+#page-dashboard .page-header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; color: var(--text-primary); }
+#page-dashboard .page-header h1 span { display: block; font-size: 11px; font-weight: 400; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 5px; font-family: 'DM Mono', monospace; }
+#page-dashboard .page-header .meta { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-muted); text-align: right; line-height: 1.9; }
+#page-dashboard .metrics { max-width: 1100px; margin: 0 auto 28px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+#page-dashboard .metric { background: var(--surface); border-radius: var(--radius-lg); padding: 20px 22px; border: 1.5px solid var(--border); position: relative; overflow: hidden; }
+#page-dashboard .metric::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+#page-dashboard .metric:nth-child(1)::before { background: linear-gradient(90deg,#f4a7b9,#f9c98a); }
+#page-dashboard .metric:nth-child(2)::before { background: linear-gradient(90deg,#7dbfe2,#c9b8e8); }
+#page-dashboard .metric:nth-child(3)::before { background: linear-gradient(90deg,#a8d8a8,#7dbfe2); }
+#page-dashboard .metric-label { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+#page-dashboard .metric-value { font-size: 26px; font-weight: 700; letter-spacing: -0.03em; color: var(--text-primary); line-height: 1; }
+#page-dashboard .metric-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+#page-dashboard .section { max-width: 1100px; margin: 0 auto 28px; background: var(--surface); border-radius: var(--radius-lg); border: 1.5px solid var(--border); padding: 28px 28px 24px; }
+#page-dashboard .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+#page-dashboard .section-num { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; color: #fff; background: var(--accent); padding: 3px 9px; border-radius: 99px; letter-spacing: 0.04em; }
+#page-dashboard .section-title { font-size: 15px; font-weight: 500; color: var(--text-primary); letter-spacing: -0.01em; }
+#page-dashboard .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 16px; }
+#page-dashboard .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
+#page-dashboard .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+#page-dashboard .toggle-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; padding: 14px 16px; background: var(--surface2); border-radius: var(--radius); align-items: center; }
+#page-dashboard .toggle-label { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text-muted); margin-right: 4px; letter-spacing: 0.04em; }
+#page-dashboard .toggle-btn { display: flex; align-items: center; gap: 6px; padding: 6px 14px; font-size: 12px; font-family: var(--font); font-weight: 500; border-radius: 99px; border: 1.5px solid var(--border); cursor: pointer; transition: all 0.18s ease; background: var(--surface); color: var(--text-secondary); }
+#page-dashboard .toggle-btn:hover { filter: brightness(0.97); }
+#page-dashboard .toggle-btn[data-ch="ALL"] { background: var(--text-primary); color: #fff; border-color: transparent; }
+#page-dashboard .toggle-btn[data-ch="ALL"].inactive { background: var(--surface); color: var(--text-secondary); border-color: var(--border); }
+#page-dashboard .toggle-btn[data-ch="WEB"].active { background: #c3e3f5; border-color: #7dbfe2; color: #2a6a90; }
+#page-dashboard .toggle-btn[data-ch="TEL"].active { background: #d1edcf; border-color: #a8d8a8; color: #2a6a40; }
+#page-dashboard .toggle-btn[data-ch="KOL"].active { background: #fcd9e3; border-color: #f4a7b9; color: #903060; }
+#page-dashboard .toggle-btn[data-ch="EC"].active { background: #fde8c3; border-color: #f9c98a; color: #805020; }
+#page-dashboard .toggle-btn[data-ch="その他"].active, #page-dashboard .toggle-btn[data-ch="其他"].active { background: #e4daf6; border-color: #c9b8e8; color: #5a3a8a; }
+#page-dashboard .ch-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+#page-dashboard .tab-bar { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+#page-dashboard .tab-btn { display: flex; flex-direction: column; align-items: flex-start; padding: 8px 14px; font-family: var(--font); border-radius: 12px; border: 1.5px solid var(--border); background: var(--surface2); color: var(--text-secondary); cursor: pointer; transition: all 0.15s ease; line-height: 1.3; }
+#page-dashboard .tab-btn:hover { border-color: var(--accent); }
+#page-dashboard .tab-btn.active { background: var(--accent); color: #fff; border-color: transparent; }
+#page-dashboard .tab-btn .tab-name { font-size: 12px; font-weight: 500; }
+#page-dashboard .tab-btn .tab-launch { font-size: 10px; font-family: 'DM Mono', monospace; opacity: 0.72; margin-top: 2px; }
+#page-dashboard .chart-wrap { position: relative; width: 100%; }
+#page-dashboard .peak-note { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; font-style: italic; }</style>
 </head>
 <body>
 
 <div class="tab-bar">
   <button class="tab-btn active" onclick="switchTab('grid', this)">🐯 商品一覧</button>
   <button class="tab-btn" onclick="switchTab('matrix', this)">📊 SKUマトリクス</button>
+  <button class="tab-btn" onclick="switchTab('dashboard', this)">📈 売れ行きダッシュボード</button>
 </div>
 
 <!-- 商品一覧 -->
@@ -287,5 +435,593 @@ function initChart() {
   });
 }
 </script>
+
+<!-- 売れ行きダッシュボード -->
+<div class="page" id="page-dashboard">
+
+
+<!-- Language toggle -->
+<div class="lang-bar">
+  <button class="lang-btn" id="btn-zh" onclick="setLang('zh')">繁體中文</button>
+  <button class="lang-btn active" id="btn-ja" onclick="setLang('ja')">日本語</button>
+</div>
+
+<!-- Header -->
+<header class="page-header">
+  <h1>
+    <span>FY2025 SALES PERFORMANCE</span>
+    <span class="i18n" data-zh="主力學習商品 銷售排名儀表板" data-ja="主力學習商品 売れ行きダッシュボード"></span>
+  </h1>
+  <div class="meta">
+    <span class="i18n"
+      data-zh="對象：9商品｜管道：WEB / TEL / KOL / EC / 其他<br>期間：2025年4月〜2026年3月｜單位：TWD（未稅）"
+      data-ja="対象：9商品｜チャネル：WEB / TEL / KOL / EC / その他<br>期間：2025年4月〜2026年3月｜単位：JPY（税抜・1TWD≈5.04円換算）"></span>
+  </div>
+</header>
+
+<!-- Metrics -->
+<div class="metrics">
+  <div class="metric">
+    <div class="metric-label i18n" data-zh="9商品 FY25 合計銷售額" data-ja="9商品 FY25 合計売上"></div>
+    <div class="metric-value">52,279,401</div>
+    <div class="metric-sub" id="metric-currency-sub">TWD <span class="i18n" data-zh="未稅" data-ja="税抜"></span></div>
+  </div>
+  <div class="metric">
+    <div class="metric-label i18n" data-zh="第一名商品" data-ja="1位商品"></div>
+    <div class="metric-value i18n" style="font-size:17px;margin-top:4px;"
+         data-zh="好情緒EQ×品格人際套組" data-ja="良い感情EQ×人格・対人関係セット">良い感情EQ×人格・対人関係セット</div>
+    <div class="metric-sub">9,212,342 TWD</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label i18n" data-zh="最大管道（整體）" data-ja="最大チャネル（全体）"></div>
+    <div class="metric-value" style="font-size:17px;margin-top:4px;">TEL</div>
+    <div class="metric-sub i18n" data-zh="多數商品的主力管道" data-ja="最多商品で主力ルート"></div>
+  </div>
+</div>
+
+<!-- Section 1 -->
+<div class="section">
+  <div class="section-header" style="justify-content:space-between;flex-wrap:wrap;gap:10px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="section-num">01</span>
+      <span class="section-title i18n" id="s1-title"
+        data-zh="FY25 銷售排名（依管道篩選）"
+        data-ja="FY25 売上ランキング（チャネル別フィルタ）"></span>
+    </div>
+    <div style="display:flex;gap:0;">
+      <button id="view-rank" onclick="setView('rank')"
+        style="padding:5px 16px;font-size:12px;font-family:var(--font);font-weight:500;border:1.5px solid var(--accent);border-right:none;border-radius:99px 0 0 99px;background:var(--accent);color:#fff;cursor:pointer;transition:all .15s;">
+        <span class="i18n" data-zh="全商品排名" data-ja="全商品ランキング"></span>
+      </button>
+      <button id="view-product" onclick="setView('product')"
+        style="padding:5px 16px;font-size:12px;font-family:var(--font);font-weight:500;border:1.5px solid var(--accent);border-radius:0 99px 99px 0;background:var(--surface);color:var(--accent);cursor:pointer;transition:all .15s;">
+        <span class="i18n" data-zh="各商品×管道" data-ja="商品別×チャネル"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Ranking view -->
+  <div id="ctrl-rank">
+    <div class="toggle-bar">
+      <span class="toggle-label">CHANNEL:</span>
+      <button class="toggle-btn active" data-ch="ALL">
+        <span class="i18n" data-zh="全管道" data-ja="全チャネル"></span>
+      </button>
+      <button class="toggle-btn" data-ch="WEB"><span class="ch-dot" style="background:var(--c-web)"></span>WEB</button>
+      <button class="toggle-btn" data-ch="TEL"><span class="ch-dot" style="background:var(--c-tel)"></span>TEL</button>
+      <button class="toggle-btn" data-ch="KOL"><span class="ch-dot" style="background:var(--c-kol)"></span>KOL</button>
+      <button class="toggle-btn" data-ch="EC"><span class="ch-dot" style="background:var(--c-ec)"></span>EC</button>
+      <button class="toggle-btn" data-ch="その他">
+        <span class="ch-dot" style="background:var(--c-other)"></span>
+        <span class="i18n" data-zh="其他" data-ja="その他"></span>
+      </button>
+    </div>
+    <div class="legend" id="rank-legend">
+      <span class="legend-item"><span class="legend-dot" style="background:#7dbfe2"></span>WEB</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#a8d8a8"></span>TEL</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#f4a7b9"></span>KOL</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#f9c98a"></span>EC</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#c9b8e8"></span>
+        <span class="i18n" data-zh="其他" data-ja="その他"></span>
+      </span>
+    </div>
+    <div class="chart-wrap" style="height:420px;">
+      <canvas id="rankChart" role="img" aria-label="FY25 9商品ランキング横棒グラフ"></canvas>
+    </div>
+  </div>
+
+  <!-- Product × Channel view -->
+  <div id="ctrl-product" style="display:none;margin-top:4px;">
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;" id="product-tab-bar"></div>
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot" style="background:#7dbfe2"></span>WEB</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#a8d8a8"></span>TEL</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#f4a7b9"></span>KOL</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#f9c98a"></span>EC</span>
+      <span class="legend-item"><span class="legend-dot" style="background:#c9b8e8"></span>
+        <span class="i18n" data-zh="其他" data-ja="その他"></span>
+      </span>
+    </div>
+    <div class="chart-wrap" style="height:320px;">
+      <canvas id="productChart" role="img" aria-label="商品別チャネル縦棒グラフ"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Section 2 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <span class="section-title i18n"
+      data-zh="月別銷售趨勢（發售時期與時間推移）"
+      data-ja="月別売上トレンド（発売時期と経時変化）"></span>
+  </div>
+
+  <div class="tab-bar" id="tabs"></div>
+
+  <div class="legend">
+    <span class="legend-item"><span class="legend-dot" style="background:#7dbfe2"></span>WEB</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#a8d8a8"></span>TEL</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#f4a7b9"></span>KOL</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#f9c98a"></span>EC</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#c9b8e8"></span>
+      <span class="i18n" data-zh="其他" data-ja="その他"></span>
+    </span>
+    <span class="legend-item">
+      <span style="display:inline-block;width:24px;height:0;border-top:2.5px dashed #e88fa8;margin-right:2px;vertical-align:middle;"></span>
+      <span class="i18n" data-zh="發售月" data-ja="発売月"></span>
+    </span>
+  </div>
+
+  <div class="chart-wrap" style="height:280px;">
+    <canvas id="trendChart" role="img" aria-label="月別売上トレンド"></canvas>
+  </div>
+</div>
+
+<!-- Section 3 -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <span class="section-title i18n"
+      data-zh="新品效果的時間推移（以發售月為0進行比較）"
+      data-ja="新製品効果の経時変化（発売月を0として比較）"></span>
+  </div>
+  <p class="peak-note i18n"
+     data-zh="X軸為距發售的經過月數。可比較各商品發售後的銷售高峰與隨時間遞減的趨勢。FY25期間前發售的商品，以FY25開始月（2025年4月）為+0M起點顯示。"
+     data-ja="X軸は発売からの経過月数。新発売直後のピークと、その後の売上減衰パターンを商品間で比較できます。FY25以前に発売された商品は、FY25開始月（2025年4月）を+0Mとして表示しています。"></p>
+
+  <div class="chart-wrap" style="height:340px;">
+    <canvas id="peakChart" role="img" aria-label="発売後月別売上推移"></canvas>
+  </div>
+</div>
+
+<script>
+// ── i18n data ──────────────────────────────────────────
+const I18N = {
+  products: {
+    '20220MY00': { zh: '和巧虎一起說英語【進階版】',   ja: '巧虎と一緒に英語を話そう【上級版】' },
+    '20230MY00': { zh: '和巧虎一起說英語 PLUS⁺【初階版】', ja: '巧虎と一緒に英語を話そう PLUS⁺【初級版】' },
+    '20240FA00': { zh: '寶寶生活好習慣套組',           ja: '赤ちゃん生活習慣セット' },
+    '20240FM00': { zh: '和巧虎一起學－注音拼音套組',   ja: '巧虎と一緒に学ぶ－注音（ピンイン）セット' },
+    '20250FA00': { zh: '好情緒EQ × 品格人際套組',      ja: '良い感情EQ×人格・対人関係セット' },
+    '20250FD00': { zh: '語彙表達・智育學習套組',        ja: '語彙表現・知育学習セット' },
+    '20250FE00': { zh: '巧虎雙語點讀圖鑑',             ja: '巧虎のバイリンガル点読図鑑' },
+    '20250FF00': { zh: '聰明左右腦 點讀大冒險',         ja: '左右脳を鍛える 点読アドベンチャー' },
+    '20250FG00': { zh: '和巧虎一起學數學套組',          ja: '巧虎と一緒に学ぶ数学セット' },
+  },
+  ui: {
+    launchPrefix: { zh: '發售 ', ja: '発売 ' },
+    launchAnnotation: { zh: '▶ 發售', ja: '▶ 発売' },
+    tooltipMonthAfter: { zh: (n) => `距發售 ${n} 個月後`, ja: (n) => `発売から ${n} ヶ月後` },
+    monthsAfterAxis: { zh: '距發售的經過月數', ja: '発売からの経過月数' },
+    otherChannel: { zh: '其他', ja: 'その他' },
+  }
+};
+
+let currentLang = 'ja';
+
+// ── Product / raw data ────────────────────────────────
+const MONTHS = ['202504','202505','202506','202507','202508','202509','202510','202511','202512','202601','202602','202603'];
+const MONTH_LABELS = ['25/4','25/5','25/6','25/7','25/8','25/9','25/10','25/11','25/12','26/1','26/2','26/3'];
+
+const PRODUCTS_BASE = [
+  { id:'20250FA00', launch:'202505', launchLabel:'2025-05' },
+  { id:'20240FA00', launch:'202410', launchLabel:'2024-10' },
+  { id:'20230MY00', launch:'202407', launchLabel:'2024-07' },
+  { id:'20250FD00', launch:'202510', launchLabel:'2025-10' },
+  { id:'20240FM00', launch:'202411', launchLabel:'2024-11' },
+  { id:'20250FE00', launch:'202601', launchLabel:'2026-01' },
+  { id:'20220MY00', launch:'202204', launchLabel:'2022-04' },
+  { id:'20250FG00', launch:'202603', launchLabel:'2026-03' },
+  { id:'20250FF00', launch:'202603', launchLabel:'2026-03' },
+];
+
+const RAW = {
+  '20220MY00': {
+    'WEB': {202504:68576,202505:64290,202506:55718,202507:72862,202508:68576,202509:21430,202510:25716,202511:42860,202512:64290,202601:30002,202602:21430,202603:47146},
+    'TEL': {202504:184298,202505:154296,202506:132865,202507:98578,202508:154296,202509:201442,202510:188584,202511:154296,202512:248588,202601:188584,202602:120008,202603:145724},
+    'KOL': {202504:34288,202505:218586,202506:12858,202507:38574,202508:12858,202509:4286,202510:55718,202511:30002,202512:8572,202601:25716,202602:4286,202603:102864},
+    'EC':  {202504:12858,202505:8572,202506:8572,202507:17144,202508:12858,202509:21430,202510:17144,202511:47146,202512:17144,202603:17144},
+    'その他':{202504:8572,202506:4286,202508:91565,202602:57009}
+  },
+  '20230MY00': {
+    'WEB': {202504:178269,202505:228550,202506:164556,202507:278831,202508:210266,202509:118847,202510:196553,202511:237692,202512:191982,202601:91420,202602:77707,202603:132559},
+    'TEL': {202504:347396,202505:415961,202506:173698,202507:205695,202508:315400,202509:338254,202510:260547,202511:251405,202512:237692,202601:201124,202602:114275,202603:210266},
+    'KOL': {202504:86849,202505:617086,202506:45710,202507:45710,202508:105133,202509:86849,202510:169127,202511:274260,202512:9142,202601:123417,202602:18284,202603:306257},
+    'EC':  {202504:27426,202505:36568,202506:100562,202507:54852,202508:36568,202509:54852,202510:45710,202511:95991,202512:45711,202601:9142,202602:27426,202603:41139},
+    'その他':{202504:4571,202506:4571,202508:101741,202602:101349}
+  },
+  '20240FA00': {
+    'WEB': {202504:229264,202505:229264,202506:208794,202507:135102,202508:163760,202509:106444,202510:184230,202511:159666,202512:184231,202601:122820,202602:139196,202603:118726},
+    'TEL': {202504:380743,202505:282486,202506:184232,202507:126914,202508:147384,202509:85974,202510:118726,202511:118726,202512:131008,202601:118726,202602:90068,202603:131008},
+    'KOL': {202504:126914,202505:888399,202506:45034,202507:12282,202508:143290,202509:216982,202510:147384,202511:327520,202512:12282,202601:188324,202602:40940,202603:196512},
+    'EC':  {202504:85015,202505:94058,202506:80921,202507:84445,202508:49984,202509:45034,202510:61410,202511:65884,202512:40940,202601:53222,202602:57316,202603:40940},
+    'その他':{202504:4094,202505:982628,202506:167865,202507:4094,202508:8188,202602:54462}
+  },
+  '20240FM00': {
+    'WEB': {202504:146304,202505:149352,202506:88391,202507:97536,202508:106680,202509:76200,202510:115824,202511:106680,202512:70104,202601:60960,202602:70103,202603:94488},
+    'TEL': {202504:243839,202505:192024,202506:195072,202507:192024,202508:195072,202509:234695,202510:332232,202511:207264,202512:252984,202601:271272,202602:140208,202603:216408},
+    'KOL': {202504:45720,202505:115824,202506:24384,202507:30480,202508:9144,202509:18288,202510:97536,202511:18288,202512:9144,202601:70104,202602:9144,202603:164592},
+    'EC':  {202504:48768,202505:54864,202506:42672,202507:64008,202508:64008,202509:57912,202510:51816,202511:64008,202512:45720,202601:33528,202602:24384,202603:54864},
+    'その他':{202505:1200762,202506:124952}
+  },
+  '20250FA00': {
+    'WEB': {202505:795721,202506:314100,202507:297348,202508:257563,202509:23034,202510:238716,202511:182178,202512:163334,202601:123546,202602:125640,202603:136110},
+    'TEL': {202505:724526,202506:714055,202507:454398,202508:399955,202509:4188,202510:240812,202511:228246,202512:203118,202601:184273,202602:106795,202603:150768},
+    'KOL': {202505:1172642,202506:90042,202507:129829,202508:100512,202509:54444,202510:142393,202511:96324,202512:29316,202601:173803,202602:14658,202603:211495},
+    'EC':  {202505:77479,202506:182178,202507:167522,202508:104701,202510:54444,202511:67009,202512:39786,202601:10470,202602:37692,202603:54444},
+    'その他':{202508:132735}
+  },
+  '20250FD00': {
+    'WEB': {202510:597376,202511:653380,202512:382693,202601:289354,202602:233350,202603:228683},
+    'TEL': {202510:634712,202511:476034,202512:345358,202601:336023,202602:154011,202603:270686},
+    'KOL': {202510:434031,202511:448032,202512:28002,202601:625377,202602:107341,202603:518037},
+    'EC':  {202510:102674,202511:121253,202512:65338,202601:42003,202602:37336,202603:18668},
+    'その他':{}
+  },
+  '20250FE00': {
+    'WEB': {202601:539260,202602:612380,202603:381595},
+    'TEL': {202601:338180,202602:212505,202603:169090},
+    'KOL': {202601:719775,202602:217075,202603:463855},
+    'EC':  {202601:105808,202602:306569,202603:273248},
+    'その他':{202602:10130}
+  },
+  '20250FF00': { 'WEB':{202603:796824},'TEL':{202603:611184},'KOL':{202603:725425},'EC':{202603:102816},'その他':{} },
+  '20250FG00': { 'WEB':{202603:935734},'TEL':{202603:816862},'KOL':{202603:1514845},'EC':{202603:140207},'その他':{} },
+};
+
+const CHANNELS = ['WEB','TEL','KOL','EC','その他'];
+const CH_COLORS = { 'WEB':'#7dbfe2','TEL':'#a8d8a8','KOL':'#f4a7b9','EC':'#f9c98a','その他':'#c9b8e8' };
+const GRID_COLOR = 'rgba(220,180,200,0.2)';
+const TICK_COLOR = '#9a7080';
+const TWD_TO_JPY = 5.04; // 2026-04-20 時点レート (1 TWD ≈ 5.04 JPY)
+
+function fmtAmount(twd) {
+  if (currentLang === 'ja') {
+    const jpy = Math.round(twd * TWD_TO_JPY);
+    return jpy >= 1000000 ? (jpy/1000000).toFixed(1)+'M円'
+         : jpy >= 1000    ? (jpy/1000).toFixed(0)+'K円'
+         : jpy+'円';
+  } else {
+    return twd >= 1000000 ? (twd/1000000).toFixed(1)+'M'
+         : twd >= 1000    ? (twd/1000).toFixed(0)+'K'
+         : String(twd);
+  }
+}
+function fmtFull(twd) {
+  if (currentLang === 'ja') {
+    return Math.round(twd * TWD_TO_JPY).toLocaleString() + ' 円';
+  }
+  return Math.round(twd).toLocaleString() + ' TWD';
+}
+function currencyUnit() { return currentLang === 'ja' ? 'JPY' : 'TWD'; }
+
+function getChannelTotal(pid, ch) {
+  const d = RAW[pid]; if (!d||!d[ch]) return 0;
+  return Object.values(d[ch]).reduce((a,b)=>a+b,0);
+}
+function getTotalSales(pid) { return CHANNELS.reduce((s,ch)=>s+getChannelTotal(pid,ch),0); }
+
+// sorted products enriched with lang names
+function getProducts() {
+  return [...PRODUCTS_BASE]
+    .map(p => ({ ...p, name: I18N.products[p.id][currentLang] }))
+    .sort((a,b) => getTotalSales(b.id) - getTotalSales(a.id));
+}
+
+// ── Chart 1 ───────────────────────────────────────────
+let rankChart, activeChannel = 'ALL';
+let productChart = null, activeProductView = 0;
+let currentView = 'rank';
+
+function setView(view) {
+  currentView = view;
+  const isRank = view === 'rank';
+  document.getElementById('ctrl-rank').style.display = isRank ? '' : 'none';
+  document.getElementById('ctrl-product').style.display = isRank ? 'none' : '';
+  const btnRank = document.getElementById('view-rank');
+  const btnProd = document.getElementById('view-product');
+  btnRank.style.background = isRank ? 'var(--accent)' : 'var(--surface)';
+  btnRank.style.color = isRank ? '#fff' : 'var(--accent)';
+  btnProd.style.background = isRank ? 'var(--surface)' : 'var(--accent)';
+  btnProd.style.color = isRank ? 'var(--accent)' : '#fff';
+  if (!isRank) buildProductTabs();
+}
+
+function buildRankChart() {
+  const sp = getProducts();
+  const stacked = activeChannel === 'ALL';
+  const datasets = stacked
+    ? CHANNELS.map(ch => ({ label:ch, data:sp.map(p=>getChannelTotal(p.id,ch)), backgroundColor:CH_COLORS[ch], borderRadius:4 }))
+    : [{ label:activeChannel, data:sp.map(p=>getChannelTotal(p.id,activeChannel)), backgroundColor:CH_COLORS[activeChannel], borderRadius:4 }];
+
+  if (rankChart) rankChart.destroy();
+  rankChart = new Chart(document.getElementById('rankChart'), {
+    type: 'bar',
+    data: { labels: sp.map(p => p.name), datasets },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend:{display:false}, tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${fmtFull(ctx.parsed.x)}`}} },
+      scales: {
+        x: { stacked, ticks:{callback:v=>fmtAmount(v),font:{size:11},color:TICK_COLOR}, grid:{color:GRID_COLOR} },
+        y: { stacked, ticks:{font:{size:11,family:'Noto Sans JP, Noto Sans TC, sans-serif'},color:'#5a3a4a'} }
+      }
+    }
+  });
+}
+
+document.querySelectorAll('.toggle-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeChannel = btn.dataset.ch;
+    document.querySelectorAll('.toggle-btn').forEach(b => {
+      if (activeChannel === 'ALL') { b.classList.toggle('active', b.dataset.ch==='ALL'); b.classList.toggle('inactive', b.dataset.ch!=='ALL'); }
+      else { b.classList.toggle('active', b.dataset.ch===activeChannel); b.classList.remove('inactive'); if (b.dataset.ch==='ALL') b.classList.remove('active'); }
+    });
+    refreshRankLegend();
+    buildRankChart();
+  });
+});
+
+function refreshRankLegend() {
+  const leg = document.getElementById('rank-legend');
+  const otherLabel = I18N.ui.otherChannel[currentLang];
+  if (activeChannel === 'ALL') {
+    leg.innerHTML = CHANNELS.map(c =>
+      `<span class="legend-item"><span class="legend-dot" style="background:${CH_COLORS[c]}"></span>${c === 'その他' ? otherLabel : c}</span>`
+    ).join('');
+  } else {
+    const lbl = activeChannel === 'その他' ? otherLabel : activeChannel;
+    leg.innerHTML = `<span class="legend-item"><span class="legend-dot" style="background:${CH_COLORS[activeChannel]}"></span>${lbl}</span>`;
+  }
+}
+
+function buildProductTabs() {
+  const sp = getProducts();
+  const bar = document.getElementById('product-tab-bar');
+  bar.innerHTML = '';
+  sp.forEach((p, i) => {
+    const btn = document.createElement('button');
+    btn.style.cssText = `padding:6px 12px;font-size:12px;font-family:var(--font);font-weight:500;border-radius:99px;border:1.5px solid ${i===activeProductView?'transparent':'rgba(220,180,200,0.35)'};background:${i===activeProductView?'var(--accent)':'var(--surface2)'};color:${i===activeProductView?'#fff':'var(--text-secondary)'};cursor:pointer;transition:all .15s;`;
+    btn.textContent = p.name;
+    btn.onclick = () => { activeProductView = i; buildProductTabs(); buildProductChart(); };
+    bar.appendChild(btn);
+  });
+  buildProductChart();
+}
+
+function buildProductChart() {
+  const sp = getProducts();
+  const p = sp[activeProductView];
+  const d = RAW[p.id] || {};
+  const otherLabel = I18N.ui.otherChannel[currentLang];
+
+  const chLabels = CHANNELS.map(ch => ch === 'その他' ? otherLabel : ch);
+  const chTotals = CHANNELS.map(ch => getChannelTotal(p.id, ch));
+  const chColors = CHANNELS.map(ch => CH_COLORS[ch]);
+
+  if (productChart) productChart.destroy();
+  productChart = new Chart(document.getElementById('productChart'), {
+    type: 'bar',
+    data: {
+      labels: chLabels,
+      datasets: [{
+        label: p.name,
+        data: chTotals,
+        backgroundColor: chColors,
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${fmtFull(ctx.parsed.y)}` } }
+      },
+      scales: {
+        x: { ticks: { font:{size:13,weight:'500'}, color:'#5a3a4a' }, grid: { display:false } },
+        y: { ticks: { callback:v=>fmtAmount(v), font:{size:11}, color:TICK_COLOR }, grid: { color:GRID_COLOR } }
+      }
+    },
+    plugins: [{
+      id: 'valueLabels',
+      afterDatasetsDraw(chart) {
+        const {ctx, data, scales:{y}} = chart;
+        ctx.save();
+        chart.getDatasetMeta(0).data.forEach((bar, i) => {
+          const val = data.datasets[0].data[i];
+          if (!val) return;
+          const label = fmtAmount(val);
+          ctx.fillStyle = '#9a7080';
+          ctx.font = '500 11px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(label, bar.x, bar.y - 6);
+        });
+        ctx.restore();
+      }
+    }]
+  });
+}
+
+// ── Chart 2 ───────────────────────────────────────────
+let trendChart = null, activeProductIdx = 0;
+
+function buildTabs() {
+  const sp = getProducts();
+  const bar = document.getElementById('tabs');
+  bar.innerHTML = '';
+  sp.forEach((p, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (i===0?' active':'');
+    const prefix = I18N.ui.launchPrefix[currentLang];
+    btn.innerHTML = `<span class="tab-name">${p.name}</span><span class="tab-launch">${prefix}${p.launchLabel}</span>`;
+    btn.onclick = () => {
+      activeProductIdx = i;
+      document.querySelectorAll('.tab-btn').forEach((b,j)=>b.classList.toggle('active',j===i));
+      updateTrend();
+    };
+    bar.appendChild(btn);
+  });
+}
+
+function updateTrend() {
+  const sp = getProducts();
+  const p = sp[activeProductIdx];
+  const d = RAW[p.id]||{};
+  const launchIdx = MONTHS.indexOf(p.launch);
+  const annotationText = I18N.ui.launchAnnotation[currentLang];
+
+  const datasets = CHANNELS.map(ch => ({
+    label: ch === 'その他' ? I18N.ui.otherChannel[currentLang] : ch,
+    data: MONTHS.map(m => (d[ch]?d[ch][parseInt(m)]||0:0)),
+    backgroundColor: CH_COLORS[ch],
+    borderRadius: 3,
+  }));
+
+  if (trendChart) trendChart.destroy();
+  trendChart = new Chart(document.getElementById('trendChart'), {
+    type: 'bar',
+    data: { labels: MONTH_LABELS, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend:{display:false}, tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${fmtFull(ctx.parsed.y)}`}} },
+      scales: {
+        x: { stacked:true, ticks:{autoSkip:false,maxRotation:0,font:{size:11},color:TICK_COLOR}, grid:{color:GRID_COLOR} },
+        y: { stacked:true, ticks:{callback:v=>fmtAmount(v),font:{size:11},color:TICK_COLOR}, grid:{color:GRID_COLOR} }
+      },
+      animation: { duration: 250 }
+    },
+    plugins: [{
+      id: 'launchLine',
+      afterDraw(chart) {
+        if (launchIdx<0||launchIdx>=MONTHS.length) return;
+        const {ctx,chartArea,scales} = chart;
+        const x = scales.x.getPixelForValue(launchIdx);
+        ctx.save();
+        ctx.setLineDash([5,4]); ctx.strokeStyle='#e88fa8'; ctx.lineWidth=2;
+        ctx.beginPath(); ctx.moveTo(x,chartArea.top); ctx.lineTo(x,chartArea.bottom); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle='#e88fa8'; ctx.font='500 10px sans-serif';
+        ctx.fillText(annotationText, x+4, chartArea.top+14);
+        ctx.restore();
+      }
+    }]
+  });
+}
+
+// ── Chart 3 ───────────────────────────────────────────
+const lineColors = ['#f4a7b9','#7dbfe2','#a8d8a8','#c9b8e8','#f9c98a','#e8b4d8','#b8d8f4','#d4e8b0','#e8d0f0'];
+let peakChart = null;
+
+function buildPeakChart() {
+  const sp = getProducts();
+  const peakDatasets = sp.map((p,i) => {
+    const d = RAW[p.id]||{};
+    // 発売月がFY25範囲内ならその月から、範囲外なら202504(FY25開始)から
+    const launchIdx = MONTHS.indexOf(p.launch);
+    const startIdx = launchIdx >= 0 ? launchIdx : 0;
+    const vals = MONTHS.slice(startIdx).map(m=>CHANNELS.reduce((s,ch)=>s+(d[ch]?d[ch][parseInt(m)]||0:0),0));
+    return {
+      label: p.name,
+      data: vals.map((y,x)=>({x,y})),
+      borderColor: lineColors[i],
+      backgroundColor: 'transparent',
+      pointRadius: 4,
+      pointBackgroundColor: lineColors[i],
+      tension: 0.35,
+      borderWidth: 2.5,
+    };
+  }).filter(Boolean);
+
+  const axisTitle = I18N.ui.monthsAfterAxis[currentLang];
+  const tooltipTitle = I18N.ui.tooltipMonthAfter[currentLang];
+
+  if (peakChart) peakChart.destroy();
+  peakChart = new Chart(document.getElementById('peakChart'), {
+    type: 'line',
+    data: { datasets: peakDatasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display:true, position:'bottom', labels:{boxWidth:10,boxHeight:10,font:{size:11},padding:12,color:TICK_COLOR} },
+        tooltip: { callbacks:{title:ctx=>tooltipTitle(ctx[0].parsed.x),label:ctx=>` ${ctx.dataset.label}: ${fmtFull(ctx.parsed.y)}`} }
+      },
+      scales: {
+        x: { type:'linear', title:{display:true,text:axisTitle,font:{size:11},color:'#c4a0b0'}, ticks:{stepSize:1,callback:v=>`+${v}M`,color:TICK_COLOR,font:{size:11}}, grid:{color:GRID_COLOR} },
+        y: { ticks:{callback:v=>fmtAmount(v),color:TICK_COLOR,font:{size:11}}, grid:{color:GRID_COLOR} }
+      }
+    }
+  });
+}
+
+// ── Language switch ────────────────────────────────────
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('btn-zh').classList.toggle('active', lang==='zh');
+  document.getElementById('btn-ja').classList.toggle('active', lang==='ja');
+
+  // Update all i18n text nodes
+  document.querySelectorAll('.i18n').forEach(el => {
+    const val = el.dataset[lang];
+    if (val !== undefined) el.innerHTML = val;
+  });
+
+  // Rebuild charts with new labels
+  refreshRankLegend();
+  buildRankChart();
+  buildTabs();
+  updateTrend();
+  buildPeakChart();
+  if (currentView === 'product') buildProductTabs();
+  updateMetricCurrency();
+}
+
+function updateMetricCurrency() {
+  // 合計売上
+  const totalTWD = 52279401;
+  const topTWD   = 9212342;
+  const el1 = document.querySelector('.metrics .metric:nth-child(1) .metric-value');
+  const el1s = document.getElementById('metric-currency-sub');
+  const el2s = document.querySelector('.metrics .metric:nth-child(2) .metric-sub');
+  if (currentLang === 'ja') {
+    el1.textContent = Math.round(totalTWD * TWD_TO_JPY).toLocaleString();
+    if (el1s) el1s.innerHTML = 'JPY <span class="i18n" data-zh="未稅" data-ja="税抜">税抜</span><br><small style="font-size:10px;color:var(--text-muted);">1 TWD ≈ ' + TWD_TO_JPY + ' JPY</small>';
+    if (el2s) el2s.textContent = Math.round(topTWD * TWD_TO_JPY).toLocaleString() + ' 円';
+  } else {
+    el1.textContent = totalTWD.toLocaleString();
+    if (el1s) el1s.innerHTML = 'TWD <span class="i18n" data-zh="未稅" data-ja="税抜">未稅</span>';
+    if (el2s) el2s.textContent = topTWD.toLocaleString() + ' TWD';
+  }
+}
+
+// ── Init ───────────────────────────────────────────────
+refreshRankLegend();
+buildRankChart();
+buildTabs();
+updateTrend();
+buildPeakChart();
+</script>
+
+</div>
 </body>
 </html>
